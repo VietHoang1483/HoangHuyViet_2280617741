@@ -23,8 +23,8 @@ def encrypt_message(key, message):
     return cipher.iv + ciphertext 
 
 def decrypt_message(key, encrypted_message):
-    iv = encrypt_message[:AES.block_size]
-    ciphertext = encrypted_message[AES.block_size]
+    iv = encrypted_message[:AES.block_size]
+    ciphertext = encrypted_message[AES.block_size:]
     cipher = AES.new(key, AES.MODE_CBC, iv)
     decrypted_message = unpad(cipher.decrypt(ciphertext), AES.block_size) 
     return decrypted_message.decode()
@@ -40,7 +40,7 @@ receive_thread.start()
 while True:
     message= input("Enter message('exit' to quit): ")
     encrypted_message = encrypt_message(aes_key, message)
-    client_socket.send(encrypt_message)
+    client_socket.send(encrypted_message)
     if message =="exit":
         break
 client_socket.close()          
